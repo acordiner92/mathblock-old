@@ -6,6 +6,10 @@ import zio.stream.ZStream
 import scala.util.Try
 import zhttp.service.server.ServerChannelFactory
 import zhttp.service.EventLoopGroup
+import pureconfig.ConfigSource
+import configuration.EnvironmentConfiguration
+import pureconfig.*
+import pureconfig.generic.derivation.default.*
 
 object Mathblock extends App {
   private val PORT = 8080
@@ -28,12 +32,8 @@ object Mathblock extends App {
     val nThreads: Int =
       args.headOption.flatMap(x => Try(x.toInt).toOption).getOrElse(0)
 
-    // Create a new server
     server.make
-      .use(_ =>
-        // Waiting for the server to start
-        putStrLn(s"Server started on port $PORT") *> ZIO.never,
-      )
+      .use(_ => putStrLn(s"Server started on port $PORT") *> ZIO.never)
       .provideCustomLayer(
         ServerChannelFactory.auto ++ EventLoopGroup.auto(nThreads)
       )
