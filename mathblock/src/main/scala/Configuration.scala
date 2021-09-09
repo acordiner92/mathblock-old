@@ -12,7 +12,12 @@ case class EnvironmentConfiguration(
     database: DatabaseConfiguration
 ) derives ConfigReader
 case class ApiConfiguration(port: Int)
-case class DatabaseConfiguration(url: String, user: String, password: String)
+
+case class DatabaseConfiguration(
+    url: String,
+    username: String,
+    password: String
+)
 
 object Configuration {
   type ConfigurationEnv = Has[Configuration.Service]
