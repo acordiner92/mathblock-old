@@ -1,4 +1,4 @@
-scalaVersion := "3.0.0"
+scalaVersion := "3.0.1"
 
 initialCommands in console := """
   println("Hello Scala 3!")
@@ -18,8 +18,8 @@ libraryDependencies ++= Seq(
   "dev.zio" %% "zio" % "1.0.11",
   "dev.zio" %% "zio-streams" % "1.0.11",
   "dev.zio" %% "zio-interop-cats" % "2.5.1.0",
-  "com.github.ghostdogpr" %% "caliban" % "1.1.0",
-  "com.github.ghostdogpr" %% "caliban-zio-http" % "1.1.0",
+  "com.github.ghostdogpr" %% "caliban" % "1.1.1",
+  "com.github.ghostdogpr" %% "caliban-zio-http" % "1.1.1",
   "org.tpolecat" %% "doobie-core" % "0.13.4",
   "org.tpolecat" %% "doobie-postgres" % "0.13.4",
   "com.github.pureconfig" %% "pureconfig-core" % "0.16.0"

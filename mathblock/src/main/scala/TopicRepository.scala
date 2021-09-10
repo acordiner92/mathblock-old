@@ -1,3 +1,5 @@
+package topicRepository
+
 import doobie.util.transactor.Transactor
 import zio.Task
 import topic.Topic
