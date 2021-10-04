@@ -15,6 +15,7 @@ import graphlqlServer.GraphqlServer
 import createTopicResolver.CreateTopicResolver
 import getTopicResolver.GetTopicResolver
 import topicRepository.TopicRepository
+import environments.Environments
 
 object Mathblock extends App {
   private val PORT = 8080
@@ -49,9 +50,8 @@ object Mathblock extends App {
             ServerChannelFactory.auto ++ EventLoopGroup
               .auto(
                 nThreads
-              ) ++ ZEnv.live ++ Configuration.live ++ TopicRepository.live ++ GetTopicResolver.live
+              ) ++ Environments.appEnvironment
           )
       )
       .exitCode
-
 }

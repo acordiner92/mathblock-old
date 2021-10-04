@@ -1,7 +1,6 @@
 package topicRepository
 
 import doobie.util.transactor.Transactor
-import zio.Task
 import topic.Topic
 import doobie.postgres.*
 import doobie.postgres.implicits.*
@@ -72,7 +71,7 @@ object TopicRepository {
         conf <- Configuration.load.toManaged_
       } yield new TopicRepository(
         Transactor.fromDriverManager[Task](
-          "org.postgresql.Driver",
+          "org.h2.Driver",
           conf.database.url,
           conf.database.username,
           conf.database.password
