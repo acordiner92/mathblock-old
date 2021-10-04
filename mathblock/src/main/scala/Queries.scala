@@ -5,6 +5,8 @@ import zio.ZIO
 import getTopicResolver.GetTopicResolver.GetTopicResolverEnv
 import topic.Topic
 
+case class TopicArgs(id: String)
+
 case class Queries(
-    topic: UUID => ZIO[GetTopicResolverEnv, Throwable, Option[Topic]]
+    topic: TopicArgs => String
 )

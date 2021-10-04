@@ -7,9 +7,14 @@ import scala.util.Try
 import zhttp.service.server.ServerChannelFactory
 import zhttp.service.EventLoopGroup
 import pureconfig.ConfigSource
-import configuration.EnvironmentConfiguration
+import configuration.*
 import pureconfig.*
 import pureconfig.generic.derivation.default.*
+import caliban.ZHttpAdapter
+import graphlqlServer.GraphqlServer
+import createTopicResolver.CreateTopicResolver
+import getTopicResolver.GetTopicResolver
+import topicRepository.TopicRepository
 
 object Mathblock extends App {
   private val PORT = 8080
@@ -21,21 +26,32 @@ object Mathblock extends App {
   )
 
   private val server =
-    Server.port(PORT) ++ // Setup port
-      Server.app(
-        Http.route { case _ -> Root / "graphiql" =>
-          graphiql
-        }
-      ) // Setup the Http app
+    GraphqlServer.api.interpreter.map(interpreter =>
+      Server.port(PORT) ++
+        Server.app(
+          Http.route {
+            case _ -> Root / "api" / "graphql" =>
+              ZHttpAdapter.makeHttpService(interpreter)
+            case _ -> Root / "graphiql" => graphiql
+          }
+        )
+    )
 
   override def run(args: List[String]): ZIO[ZEnv, Nothing, ExitCode] =
     val nThreads: Int =
       args.headOption.flatMap(x => Try(x.toInt).toOption).getOrElse(0)
 
-    server.make
-      .use(_ => putStrLn(s"Server started on port $PORT") *> ZIO.never)
-      .provideCustomLayer(
-        ServerChannelFactory.auto ++ EventLoopGroup.auto(nThreads)
+    server
+      .flatMap(x =>
+        x.make
+          .use(_ => putStrLn(s"Server started on port $PORT") *> ZIO.never)
+          .provideCustomLayer(
+            ServerChannelFactory.auto ++ EventLoopGroup
+              .auto(
+                nThreads
+              ) ++ ZEnv.live ++ Configuration.live ++ TopicRepository.live ++ GetTopicResolver.live
+          )
       )
       .exitCode
+
 }

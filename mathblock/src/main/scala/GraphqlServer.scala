@@ -21,16 +21,13 @@ import query.Queries
 import scala.language.postfixOps
 import java.util.UUID
 
-object GraphqlServer
-    extends GenericSchema[GetTopicResolverEnv & CreateTopicResolverEnv] {
+object GraphqlServer extends GenericSchema[GetTopicResolverEnv] {
 
-  val api: GraphQL[
-    Console & Clock & GetTopicResolverEnv & CreateTopicResolverEnv
-  ] = {
+  val api: GraphQL[Console & Clock & GetTopicResolverEnv] = {
     graphQL(
       RootResolver(
-        Queries(GetTopicResolver.handle(_)),
-        Mutations(CreateTopicResolver.handle(_))
+        Queries(_ => "Hello"),
+        Mutations(_ => "Hello")
       )
     ) @@ maxFields(200) @@
       maxDepth(30) @@

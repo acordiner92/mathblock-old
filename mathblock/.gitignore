@@ -6,6 +6,7 @@
 
 # sbt, vscode, metals
 project/metals.sbt
+project/**
 .metals
 .vscode
 .bloop
